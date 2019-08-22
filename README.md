@@ -1,6 +1,20 @@
 # cast-string
 Cast query string to number and boolean.
 
+## import
+
+ES Module
+
+```js
+import { int } from 'cast-string' 
+```
+
+Node.js
+
+```js
+const { int } = require('cast-string')
+```
+
 ## Functions
 
 ### int
