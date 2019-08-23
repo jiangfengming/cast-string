@@ -1,6 +1,19 @@
 # cast-string
 Cast query string to number and boolean.
 
+* [Import](#import)
+* [int](#int)
+* [float](#float)
+* [number](#number)
+* [bool](#bool)
+* [string](#string)
+* [arrayOfInt](#arrayofint)
+* [arrayOfFloat](#arrayoffloat)
+* [arrayOfNumber](#arrayofnumber)
+* [arrayOfString](#arrayofstring)
+* [createCastObject](#createcastobject)
+* [License](#license)
+
 ## Import
 
 ES Module
