@@ -10,7 +10,7 @@ import {
   arrayOfFloat,
   arrayOfNumber,
   arrayOfString,
-  createCastObject
+  StringCaster
 } from '../src/index.mjs'
 
 assert.strictEqual(int('10.1cm'), 10)
@@ -90,18 +90,19 @@ const query = {
   ai2: '1,2,3'
 }
 
-const castObj = createCastObject(query)
-assert.strictEqual(castObj.int('i'), 1)
-assert.deepStrictEqual(castObj.arrayOfInt('ai'), [1, 2])
-assert.deepStrictEqual(castObj.arrayOfInt('ai2', { splitComma: true }), [1, 2, 3])
+const caster = new StringCaster(query)
+assert.strictEqual(caster.int('i'), 1)
+assert.deepStrictEqual(caster.arrayOfInt('ai'), [1, 2])
+assert.deepStrictEqual(caster.arrayOfInt('ai2', { splitComma: true }), [1, 2, 3])
+assert.strictEqual(caster.source, query)
 
 const search = new URLSearchParams('i=1&ai=1&ai=2&ai2=1,2,3')
-const castObj2 = createCastObject(search)
-assert.strictEqual(castObj2.int('i'), 1)
-assert.deepStrictEqual(castObj2.arrayOfInt('ai'), [1, 2])
-assert.deepStrictEqual(castObj2.arrayOfInt('ai2', { splitComma: true }), [1, 2, 3])
+const caster2 = new StringCaster(search)
+assert.strictEqual(caster2.int('i'), 1)
+assert.deepStrictEqual(caster2.arrayOfInt('ai'), [1, 2])
+assert.deepStrictEqual(caster2.arrayOfInt('ai2', { splitComma: true }), [1, 2, 3])
 
-const castObj3 = createCastObject(() => query)
-assert.strictEqual(castObj3.int('i'), 1)
-assert.deepStrictEqual(castObj3.arrayOfInt('ai'), [1, 2])
-assert.deepStrictEqual(castObj3.arrayOfInt('ai2', { splitComma: true }), [1, 2, 3])
+const caster3 = new StringCaster(() => query)
+assert.strictEqual(caster3.int('i'), 1)
+assert.deepStrictEqual(caster3.arrayOfInt('ai'), [1, 2])
+assert.deepStrictEqual(caster3.arrayOfInt('ai2', { splitComma: true }), [1, 2, 3])

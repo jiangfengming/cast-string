@@ -120,59 +120,59 @@ function trimArray(a, defaults, dedup = true) {
   return a.length ? a : defaults
 }
 
-export function createCastObject(source) {
-  function getValue(key, isArray = false) {
-    let src = source
+export class StringCaster {
+  constructor(source) {
+    this.source = source
+  }
 
-    if (source.constructor === Function) {
-      src = source()
+  _getValue(key, isArray = false) {
+    let src = this.source
+
+    if (this.source instanceof Function) {
+      src = this.source()
     }
 
-    if (src.constructor === URLSearchParams) {
+    if (src instanceof URLSearchParams) {
       return isArray ? src.getAll(key) : src.get(key)
     } else {
       return src[key]
     }
   }
 
-  return {
-    source,
+  int(key, { defaults, radix, throws } = {}) {
+    return int(this._getValue(key), { defaults, radix, throws })
+  }
 
-    int(key, { defaults, radix, throws } = {}) {
-      return int(getValue(key), { defaults, radix, throws })
-    },
+  float(key, { defaults, throws } = {}) {
+    return float(this._getValue(key), { defaults, throws })
+  }
 
-    float(key, { defaults, throws } = {}) {
-      return float(getValue(key), { defaults, throws })
-    },
+  number(key, { defaults, throws } = {}) {
+    return number(this._getValue(key), { defaults, throws })
+  }
 
-    number(key, { defaults, throws } = {}) {
-      return number(getValue(key), { defaults, throws })
-    },
+  bool(key, { empty, defaults, throws } = {}) {
+    return bool(this._getValue(key), { empty, defaults, throws })
+  }
 
-    bool(key, { empty, defaults, throws } = {}) {
-      return bool(getValue(key), { empty, defaults, throws })
-    },
+  string(key, { defaults } = {}) {
+    return string(this._getValue(key), { defaults })
+  }
 
-    string(key, { defaults } = {}) {
-      return string(getValue(key), { defaults })
-    },
+  arrayOfInt(key, { radix, defaults, dedup, splitComma, throws } = {}) {
+    return arrayOfInt(this._getValue(key, true), { radix, defaults, dedup, splitComma, throws })
+  }
 
-    arrayOfInt(key, { radix, defaults, dedup, splitComma, throws } = {}) {
-      return arrayOfInt(getValue(key, true), { radix, defaults, dedup, splitComma, throws })
-    },
+  arrayOfFloat(key, { defaults, dedup, splitComma, throws } = {}) {
+    return arrayOfFloat(this._getValue(key, true), { defaults, dedup, splitComma, throws })
+  }
 
-    arrayOfFloat(key, { defaults, dedup, splitComma, throws } = {}) {
-      return arrayOfFloat(getValue(key, true), { defaults, dedup, splitComma, throws })
-    },
+  arrayOfNumber(key, { defaults, dedup, splitComma, throws } = {}) {
+    return arrayOfNumber(this._getValue(key, true), { defaults, dedup, splitComma, throws })
+  }
 
-    arrayOfNumber(key, { defaults, dedup, splitComma, throws } = {}) {
-      return arrayOfNumber(getValue(key, true), { defaults, dedup, splitComma, throws })
-    },
-
-    arrayOfString(key, { defaults, dedup, splitComma, throws } = {}) {
-      return arrayOfString(getValue(key, true), { defaults, dedup, splitComma, throws })
-    }
+  arrayOfString(key, { defaults, dedup, splitComma, throws } = {}) {
+    return arrayOfString(this._getValue(key, true), { defaults, dedup, splitComma, throws })
   }
 }
 
@@ -186,5 +186,5 @@ export default {
   arrayOfFloat,
   arrayOfNumber,
   arrayOfString,
-  createCastObject
+  StringCaster
 }

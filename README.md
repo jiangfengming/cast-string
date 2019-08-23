@@ -11,7 +11,7 @@ Cast query string to number and boolean.
 * [arrayOfFloat](#arrayoffloat)
 * [arrayOfNumber](#arrayofnumber)
 * [arrayOfString](#arrayofstring)
-* [createCastObject](#createcastobject)
+* [StringCaster](#stringcaster)
 * [License](#license)
 
 ## Import
@@ -338,10 +338,10 @@ arrayOfString(['foo,foo,bar', 'baz'], { dedup: false, splitComma: true })
 // -> ['foo', 'foo', 'bar', 'baz']
 ```
 
-### createCastObject
+### StringCaster
 
 ```js
-createCastObject(obj)
+new StringCaster(obj)
 ```
 
 Creates a cast object from `obj`.
@@ -364,38 +364,41 @@ const query = {
   ai2: '1,2,3'
 }
 
-const castObj = createCastObject(query)
+const caster = new StringCaster(query)
 
-castObj.int('i')
+caster.int('i')
 // -> 1
 
-castObj.arrayOfInt('ai')
+caster.arrayOfInt('ai')
 // -> [1, 2]
 
-castObj.arrayOfInt('ai2', { splitComma: true })
+caster.arrayOfInt('ai2', { splitComma: true })
 // -> [1, 2, 3]
+
+caster.source
+// -> query
 
 const search = new URLSearchParams('i=1&ai=1&ai=2&ai2=1,2,3')
-const castObj2 = createCastObject(search)
+const caster2 = new StringCaster(search)
 
-castObj2.int('i')
+caster2.int('i')
 // -> 1
 
-castObj2.arrayOfInt('ai')
+caster2.arrayOfInt('ai')
 // -> [1, 2]
 
-castObj2.arrayOfInt('ai2', { splitComma: true })
+caster2.arrayOfInt('ai2', { splitComma: true })
 // -> [1, 2, 3]
 
-const castObj3 = createCastObject(() => query)
+const caster3 = new StringCaster(() => query)
 
-castObj3.int('i')
+caster3.int('i')
 // --> 1
 
-castObj3.arrayOfInt('ai')
+caster3.arrayOfInt('ai')
 // -> [1, 2]
 
-castObj3.arrayOfInt('ai2', { splitComma: true })
+caster3.arrayOfInt('ai2', { splitComma: true })
 // -> [1, 2, 3]
 ```
 
