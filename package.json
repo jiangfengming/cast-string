@@ -1,6 +1,6 @@
 {
   "name": "cast-string",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Cast query string to number and boolean.",
   "main": "dist/castString",
   "scripts": {
