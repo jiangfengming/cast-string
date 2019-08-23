@@ -1,4 +1,4 @@
-export function int(s, radix, defaults, throwIfInvalid = false) {
+export function int(s, { radix, defaults, throws } = {}) {
   if (s == null) {
     return defaults
   }
@@ -6,8 +6,8 @@ export function int(s, radix, defaults, throwIfInvalid = false) {
   s = parseInt(s, radix)
 
   if (isNaN(s)) {
-    if (throwIfInvalid) {
-      throw new Error(`can' cast "${s}" to int`)
+    if (throws) {
+      throw throws
     } else {
       return defaults
     }
@@ -16,7 +16,7 @@ export function int(s, radix, defaults, throwIfInvalid = false) {
   }
 }
 
-export function float(s, defaults, throwIfInvalid = false) {
+export function float(s, { defaults, throws } = {}) {
   if (s == null) {
     return defaults
   }
@@ -24,8 +24,8 @@ export function float(s, defaults, throwIfInvalid = false) {
   s = parseFloat(s)
 
   if (isNaN(s)) {
-    if (throwIfInvalid) {
-      throw new Error(`can' cast "${s}" to float`)
+    if (throws) {
+      throw throws
     } else {
       return defaults
     }
@@ -34,7 +34,7 @@ export function float(s, defaults, throwIfInvalid = false) {
   }
 }
 
-export function number(s, defaults, throwIfInvalid = false) {
+export function number(s, { defaults, throws } = {}) {
   if (s == null) {
     return defaults
   }
@@ -42,8 +42,8 @@ export function number(s, defaults, throwIfInvalid = false) {
   s = Number(s)
 
   if (isNaN(s)) {
-    if (throwIfInvalid) {
-      throw new Error(`can' cast "${s}" to number`)
+    if (throws) {
+      throw throws
     } else {
       return defaults
     }
@@ -52,45 +52,72 @@ export function number(s, defaults, throwIfInvalid = false) {
   }
 }
 
-export function bool(s, defaults, throwIfInvalid = false) {
+export function bool(s, { empty = true, defaults, throws } = {}) {
   if (s == null) {
     return defaults
   }
 
-  const truthy = ['1', 'true', 'yes', '']
+  const truthy = ['1', 'true', 'yes']
   const falsy = ['0', 'false', 'no']
+
+  if (empty === true) {
+    truthy.push('')
+  } else if (empty === false) {
+    falsy.push('')
+  }
 
   if (truthy.includes(s)) {
     return true
   } else if (falsy.includes(s)) {
     return false
   } else {
-    if (throwIfInvalid) {
-      throw new Error(`can' cast "${s}" to boolean`)
+    if (throws) {
+      throw throws
     } else {
       return defaults
     }
   }
 }
 
-export function string(i, defaults) {
-  return i == null ? defaults : String(i)
+export function string(v, { defaults } = {}) {
+  return v == null ? defaults : String(v)
 }
 
-export function arrayOfInt(a, radix, defaults, throwIfInvalid) {
-  return a.map(s => int(s, radix, defaults, throwIfInvalid))
+export function arrayOfInt(a, { radix, defaults, dedup, splitComma, throws } = {}) {
+  return trimArray(toArray(a, splitComma).map(s => int(s, { radix, throws })), defaults, dedup)
 }
 
-export function arrayOfFloat(a, defaults, throwIfInvalid) {
-  return a.map(s => float(s, defaults, throwIfInvalid))
+export function arrayOfFloat(a, { defaults, dedup, splitComma, throws } = {}) {
+  return trimArray(toArray(a, splitComma).map(s => float(s, { throws })), defaults, dedup)
 }
 
-export function arrayOfNumber(a, defaults, throwIfInvalid) {
-  return a.map(s => number(s, defaults, throwIfInvalid))
+export function arrayOfNumber(a, { defaults, dedup, splitComma, throws } = {}) {
+  return trimArray(toArray(a, splitComma).map(s => number(s, { throws })), defaults, dedup)
 }
 
-export function arrayOfString(a, defaults) {
-  return a.map(i => string(i, defaults))
+export function arrayOfString(a, { defaults, dedup, splitComma } = {}) {
+  return trimArray(toArray(a, splitComma).map(v => string(v)), defaults, dedup)
+}
+
+function toArray(a, splitComma = false) {
+  if (a == null) {
+    return []
+  }
+
+  if (a.constructor === String) {
+    a = [a]
+  }
+
+  if (splitComma) {
+    a = a.join(',').split(',')
+  }
+
+  return a
+}
+
+function trimArray(a, defaults, dedup = true) {
+  a = a.filter((v, i) => v != null && (dedup ? a.indexOf(v) === i : true))
+  return a.length ? a : defaults
 }
 
 export function createCastObject(source) {
@@ -102,85 +129,62 @@ export function createCastObject(source) {
     }
 
     if (src.constructor === URLSearchParams) {
-      if (isArray) {
-        const val = src.getAll(key)
-
-        if (val.length === 1) {
-          return val[0].split(',')
-        } else {
-          return val
-        }
-      } else {
-        return src.get(key)
-      }
-    } else if (src.constructor === Object) {
-      if (isArray) {
-        const val = src[key]
-
-        if (val == null) {
-          return []
-        } else if (val.constructor === Array) {
-          return val
-        } else if (val.constructor === String) {
-          return val.split(',')
-        } else {
-          return []
-        }
-      } else {
-        const val = src[key]
-
-        if (val == null) {
-          return null
-        } else if (val.constructor === Array) {
-          return val[0]
-        } else if (val.constructor === String) {
-          return val
-        } else {
-          return null
-        }
-      }
+      return isArray ? src.getAll(key) : src.get(key)
+    } else {
+      return src[key]
     }
   }
 
   return {
     source,
 
-    int(key, radix, defaults, throwIfInvalid) {
-      return int(getValue(key), radix, defaults, throwIfInvalid)
+    int(key, { defaults, radix, throws } = {}) {
+      return int(getValue(key), { defaults, radix, throws })
     },
 
-    float(key, defaults, throwIfInvalid) {
-      return float(getValue(key), defaults, throwIfInvalid)
+    float(key, { defaults, throws } = {}) {
+      return float(getValue(key), { defaults, throws })
     },
 
-    number(key, defaults, throwIfInvalid) {
-      return number(getValue(key), defaults, throwIfInvalid)
+    number(key, { defaults, throws } = {}) {
+      return number(getValue(key), { defaults, throws })
     },
 
-    bool(key, defaults, throwIfInvalid) {
-      return bool(getValue(key), defaults, throwIfInvalid)
+    bool(key, { empty, defaults, throws } = {}) {
+      return bool(getValue(key), { empty, defaults, throws })
     },
 
-    string(key, defaults) {
-      return string(getValue(key), defaults)
+    string(key, { defaults } = {}) {
+      return string(getValue(key), { defaults })
     },
 
-    arrayOfInt(key, radix, defaults, throwIfInvalid) {
-      return arrayOfInt(getValue(key, true), radix, defaults, throwIfInvalid)
+    arrayOfInt(key, { radix, defaults, dedup, splitComma, throws } = {}) {
+      return arrayOfInt(getValue(key, true), { radix, defaults, dedup, splitComma, throws })
     },
 
-    arrayOfFloat(key, defaults, throwIfInvalid) {
-      return arrayOfFloat(getValue(key, true), defaults, throwIfInvalid)
+    arrayOfFloat(key, { defaults, dedup, splitComma, throws } = {}) {
+      return arrayOfFloat(getValue(key, true), { defaults, dedup, splitComma, throws })
     },
 
-    arrayOfNumber(key, defaults, throwIfInvalid) {
-      return arrayOfNumber(getValue(key, true), defaults, throwIfInvalid)
+    arrayOfNumber(key, { defaults, dedup, splitComma, throws } = {}) {
+      return arrayOfNumber(getValue(key, true), { defaults, dedup, splitComma, throws })
     },
 
-    arrayOfString(key, defaults, throwIfInvalid) {
-      return arrayOfString(getValue(key, true), defaults, throwIfInvalid)
+    arrayOfString(key, { defaults, dedup, splitComma, throws } = {}) {
+      return arrayOfString(getValue(key, true), { defaults, dedup, splitComma, throws })
     }
   }
 }
 
-export default { int, float, number, bool, string, arrayOfInt, arrayOfFloat, arrayOfNumber, arrayOfString }
+export default {
+  int,
+  float,
+  number,
+  bool,
+  string,
+  arrayOfInt,
+  arrayOfFloat,
+  arrayOfNumber,
+  arrayOfString,
+  createCastObject
+}
