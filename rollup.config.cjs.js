@@ -1,15 +1,17 @@
-import babel from 'rollup-plugin-babel'
+import babel from '@rollup/plugin-babel';
 
 export default {
-  input: 'src/index.mjs',
+  input: 'src/index.js',
 
   output: {
     format: 'cjs',
     exports: 'named',
-    file: 'dist/castString.js'
+    file: 'dist/cast-string.cjs'
   },
 
   plugins: [
-    babel()
+    babel({
+      babelHelpers: 'bundled'
+    })
   ]
-}
+};

@@ -1,7 +1,22 @@
 # cast-string
 Cast query string to number and boolean.
 
-* [Import](#import)
+## Import
+
+ES Module
+
+```js
+import { int } from 'cast-string';
+```
+
+Node.js
+
+```js
+const { int } = require('cast-string');
+```
+
+## Functions
+
 * [int](#int)
 * [float](#float)
 * [number](#number)
@@ -12,23 +27,6 @@ Cast query string to number and boolean.
 * [arrayOfNumber](#arrayofnumber)
 * [arrayOfString](#arrayofstring)
 * [StringCaster](#stringcaster)
-* [License](#license)
-
-## Import
-
-ES Module
-
-```js
-import { int } from 'cast-string' 
-```
-
-Node.js
-
-```js
-const { int } = require('cast-string')
-```
-
-## Functions
 
 ### int
 
