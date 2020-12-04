@@ -4,6 +4,7 @@
   "description": "Cast query string to number and boolean.",
   "main": "./dist/cast-string.cjs",
   "type": "module",
+  "module": "./dist/cast-string.js",
   "exports": {
     "import": "./dist/cast-string.js",
     "require": "./dist/cast-string.cjs"
