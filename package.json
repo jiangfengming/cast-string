@@ -34,11 +34,6 @@
     "eslint-config-enough": "^0.7.0",
     "typescript": "^4.1.3"
   },
-  "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ]
-  },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
     "plugins": [
