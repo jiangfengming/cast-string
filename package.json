@@ -1,6 +1,6 @@
 {
   "name": "cast-string",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Cast query string to number and boolean.",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
