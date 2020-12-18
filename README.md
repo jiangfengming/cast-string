@@ -1,5 +1,5 @@
 # cast-string
-Casting URL query string to number and boolean.
+Convert URL query string to number and boolean.
 
 ## Import
 ### ES Module
@@ -84,12 +84,6 @@ float('a')
 
 float('a', { defaults: 10.1 })
 // -> 10.1
-
-try {
-  float('a', { throws: new Error('Invalid parameter x') })
-} catch (e) {
-  e.message // Invalid parameter x
-}
 ```
 
 ### number
@@ -112,12 +106,6 @@ number('1e2')
 
 number('a', { defaults: 10.1 })
 // -> 10.1
-
-try {
-  number('a', { throws: new Error('Invalid parameter x') })
-} catch (e) {
-  e.message // Invalid parameter x
-}
 ```
 
 ### bool
@@ -141,7 +129,7 @@ const isRecursive = bool(searchParams.get('recursive'))
 
 If `empty` is `false`, then empty string is a falsy value.
 
-If `s` is not truthy nor falsy, `throws` would be thrown if it is defined, or `defaults` will be returned.
+If `s` is not truthy nor falsy, `defaults` will be returned.
 
 ```js
 bool('1')
@@ -170,12 +158,6 @@ bool('a')
 
 bool('a', { defaults: false })
 // -> false
-
-try {
-  bool('a', { throws: new Error('Invalid parameter x') })
-} catch (e) {
-  e.message // Invalid parameter x
-}
 ```
 
 ### string
