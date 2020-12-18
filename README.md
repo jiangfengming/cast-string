@@ -1,20 +1,29 @@
 # cast-string
-Cast query string to number and boolean.
+Casting URL query string to number and boolean.
 
 ## Import
-
-ES Module
-
+### ES Module
+Import single method:
 ```js
 import { int } from 'cast-string';
+
+const id = int(urlSearchParams.get('id'));
 ```
 
-Node.js
+Or import all methods:
+```js
+import cast from 'case-string';
 
+const id = cast.int(urlSearchParams.get('id'));
+```
+
+### CommonJS
 ```js
 const { int } = require('cast-string');
 ```
 
+NOTE: This package is written in ES2020 syntax and not transpiled. It is only tested on Node.js v14 LTS.
+To use it in old browsers, you need to transpile the code using tool such as Babel.
 ## Functions
 
 * [int](#int)
@@ -31,12 +40,12 @@ const { int } = require('cast-string');
 ### int
 
 ```js
-int(s, { radix, defaults, throws })
+import { int } from 'cast-string';
+
+int(str, { radix, defaults })
 ```
 
-Cast string to int using `parseInt()`.
-
-If `parseInt()` returns `NaN`, `throws` would be thrown if it is defined, or `defaults` will be returned.
+Convert a string to a number using `parseInt()`. If `parseInt()` returns `NaN`, `defaults` will be returned.
 
 ```js
 int('10.1cm')
@@ -53,21 +62,15 @@ int('a')
 
 int('a', { defaults: 10 })
 // -> 10
-
-try {
-  int('a', { throws: new Error('Invalid parameter x') })
-} catch (e) {
-  e.message // Invalid parameter x
-}
 ```
 
 ### float
 
 ```js
-float(s, { defaults, throws })
+float(str, { defaults })
 ```
 
-Cast string to float using `parseFloat()`.
+Convert a string to a number using `parseFloat()`.
 
 ```js
 float('10.1cm')
@@ -92,10 +95,10 @@ try {
 ### number
 
 ```js
-number(s, { defaults, throws })
+number(str, { defaults })
 ```
 
-Cast string to number using `Number()`.
+Convert a string to a number using `Number()`.
 
 ```js
 number('10.1')
@@ -120,10 +123,10 @@ try {
 ### bool
 
 ```js
-bool(s, { empty = true, defaults, throws })
+bool(str, { empty = true, defaults })
 ```
 
-Cast string to boolean.
+Convert a string to a boolean.
 
 Truthy values are `'1'`, `'true'`, `'yes'`.
 Falsy values are `'0'`, `'false'`, `'no'`.
@@ -178,13 +181,11 @@ try {
 ### string
 
 ```js
-string(v, { defaults })
+string(str, { defaults })
 ```
 
-Cast any type to string.
-
-If `v` is `null`/`undefined`, returns `defaults`.
-
+If `str` is a string, return as is.
+If `str` is `null`/`undefined`, return `defaults`.
 
 ```js
 string('foo')
@@ -206,10 +207,10 @@ string(null, { defaults: 'a' })
 ### arrayOfInt
 
 ```js
-arrayOfInt(a, { radix, defaults, dedup, splitComma, throws })
+arrayOfInt(str, { radix, defaults, dedup, splitComma })
 ```
 
-Cast array of string to array of int using `parseInt()`.
+Convert a string or an array of string to an array of number using `parseInt()`.
 
 ```js
 arrayOfInt(['1', '1cm', '10.1cm', '0xB.1', 'a', null, undefined])
@@ -217,6 +218,15 @@ arrayOfInt(['1', '1cm', '10.1cm', '0xB.1', 'a', null, undefined])
 
 arrayOfInt(['1', '1cm', '10.1cm', '0xB.1', 'a', null, undefined], { radix: 2, dedup: false })
 // -> [1, 1, 2, 0]
+
+arrayOfInt('1')
+// -> [1]
+
+arrayOfInt('1,1,2,3', { splitComma: true })
+// -> [1, 2, 3]
+
+arrayOfInt(['1,1,2', '3'], { dedup: false, splitComma: true })
+// -> [1, 1, 2, 3]
 
 arrayOfInt([])
 // -> undefined
@@ -229,24 +239,15 @@ arrayOfInt(null)
 
 arrayOfInt(null, { defaults: [] })
 // -> []
-
-arrayOfInt('1')
-// -> [1]
-
-arrayOfInt('1,1,2,3', { splitComma: true })
-// -> [1, 2, 3]
-
-arrayOfInt(['1,1,2', '3'], { dedup: false, splitComma: true })
-// -> [1, 1, 2, 3]
 ```
 
 ### arrayOfFloat
 
 ```js
-arrayOfFloat(a, { defaults, dedup, splitComma, throws })
+arrayOfFloat(str, { defaults, dedup, splitComma })
 ```
 
-Cast array of string to array of float using `parseFloat()`.
+Convert a string or an array of string to an array of number using `parseFloat()`.
 
 ```js
 arrayOfFloat(['1', '1', '10.1', '', null, undefined])
@@ -280,10 +281,10 @@ arrayOfFloat(['1.1,1.1,2.2', '3.3'], { dedup: false, splitComma: true })
 ### arrayOfNumber
 
 ```js
-arrayOfNumber(a, { defaults, dedup, splitComma, throws })
+arrayOfNumber(str, { defaults, dedup, splitComma })
 ```
 
-Cast array of string to array of number using `Number()`.
+Convert a string or an array of string to an array of number using `Number()`.
 
 ```js
 arrayOfNumber(['1', '1', '1.1', '2cm', '1e2', '', 'a', null, undefined])
@@ -317,10 +318,10 @@ arrayOfNumber(['1.1,1.1,2.2', '3.3'], { dedup: false, splitComma: true })
 ### arrayOfString
 
 ```js
-arrayOfString(a, { defaults, dedup, splitComma })
+arrayOfString(str, { defaults, dedup, splitComma })
 ```
 
-Cast array of any type to array of string.
+Convert a string or an array of string to an array of string.
 
 ```js
 arrayOfString(['foo', 'foo', '', null, undefined])
@@ -342,7 +343,7 @@ arrayOfString(['foo,foo,bar', 'baz'], { dedup: false, splitComma: true })
 new StringCaster(obj)
 ```
 
-Creates a cast object from `obj`.
+Create a cast object from `obj`.
 `obj` can be a collection of key and value pairs, for example:
 
 ```js
@@ -353,7 +354,6 @@ Creates a cast object from `obj`.
 ```
 
 Or a [URLSearchParams](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams) object.
-Or a function that returns above types.
 
 ```js
 const query = {
