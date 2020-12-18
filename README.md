@@ -354,6 +354,7 @@ Create a cast object from `obj`.
 ```
 
 Or a [URLSearchParams](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams) object.
+Or a function that returns a query string object or URLSearchParams.
 
 ```js
 const query = {
