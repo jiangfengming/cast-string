@@ -36,7 +36,7 @@ export declare function arrayOfString(str: string | string[] | null | undefined,
     dedup?: boolean;
     splitComma?: boolean;
 }): string[] | undefined;
-declare type Source = URLSearchParams | Record<string, string | string[]> | (() => URLSearchParams | Record<string, string>);
+declare type Source = URLSearchParams | Record<string, string | string[]> | (() => URLSearchParams | Record<string, string | string[]>);
 export declare class StringCaster {
     private source;
     constructor(source: Source);

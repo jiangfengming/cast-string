@@ -156,7 +156,9 @@ function trimArray<T>(arr: (T | undefined)[], defaults: T[] | undefined = undefi
   return a.length ? a : defaults;
 }
 
-type Source = URLSearchParams | Record<string, string | string[]> | (() => URLSearchParams | Record<string, string>);
+type Source = URLSearchParams |
+  Record<string, string | string[]> |
+  (() => URLSearchParams | Record<string, string | string[]>);
 
 export class StringCaster {
   private source: Source
