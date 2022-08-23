@@ -1,38 +1,38 @@
-export declare function int(str: string | null | undefined, { radix, defaults }?: {
+export declare function int(str: string | null | undefined, options?: {
     radix?: number;
-    defaults?: number;
+    default?: number;
 }): number | undefined;
-export declare function float(str: string | null | undefined, { defaults }?: {
-    defaults?: number;
+export declare function float(str: string | null | undefined, options?: {
+    default?: number;
 }): number | undefined;
-export declare function number(str: string | null | undefined, { defaults }?: {
-    defaults?: number;
+export declare function number(str: string | null | undefined, options?: {
+    default?: number;
 }): number | undefined;
-export declare function bool(str: string | null | undefined, { empty, defaults }?: {
+export declare function bool(str: string | null | undefined, options?: {
     empty?: boolean;
-    defaults?: boolean;
+    default?: boolean;
 }): boolean | undefined;
-export declare function string(str: string | null | undefined, { defaults }?: {
-    defaults?: string;
+export declare function string(str: string | null | undefined, options?: {
+    default?: string;
 }): string | undefined;
-export declare function arrayOfInt(str: string | string[] | null | undefined, { radix, defaults, dedup, splitComma }?: {
+export declare function arrayOfInt(str: string | string[] | null | undefined, options?: {
     radix?: number;
-    defaults?: undefined;
+    default?: undefined;
     dedup?: boolean;
     splitComma?: boolean;
 }): number[] | undefined;
-export declare function arrayOfFloat(str: string | string[] | null | undefined, { defaults, dedup, splitComma }?: {
-    defaults?: undefined;
+export declare function arrayOfFloat(str: string | string[] | null | undefined, options?: {
+    default?: undefined;
     dedup?: boolean;
     splitComma?: boolean;
 }): number[] | undefined;
-export declare function arrayOfNumber(str: string | string[] | null | undefined, { defaults, dedup, splitComma }?: {
-    defaults?: undefined;
+export declare function arrayOfNumber(str: string | string[] | null | undefined, options?: {
+    default?: undefined;
     dedup?: boolean;
     splitComma?: boolean;
 }): number[] | undefined;
-export declare function arrayOfString(str: string | string[] | null | undefined, { defaults, dedup, splitComma }?: {
-    defaults?: undefined;
+export declare function arrayOfString(str: string | string[] | null | undefined, options?: {
+    default?: undefined;
     dedup?: boolean;
     splitComma?: boolean;
 }): string[] | undefined;
@@ -42,44 +42,15 @@ export declare class StringCaster {
     constructor(source: Source);
     private get;
     private getAll;
-    int(key: string, { defaults, radix }?: {
-        radix?: number;
-        defaults?: number;
-    }): number | undefined;
-    float(key: string, { defaults }?: {
-        defaults?: number;
-    }): number | undefined;
-    number(key: string, { defaults }?: {
-        defaults?: number;
-    }): number | undefined;
-    bool(key: string, { empty, defaults }?: {
-        empty?: boolean;
-        defaults?: boolean;
-    }): boolean | undefined;
-    string(key: string, { defaults }?: {
-        defaults?: string;
-    }): string | undefined;
-    arrayOfInt(key: string, { radix, defaults, dedup, splitComma }?: {
-        radix?: number;
-        defaults?: undefined;
-        dedup?: boolean;
-        splitComma?: boolean;
-    }): number[] | undefined;
-    arrayOfFloat(key: string, { defaults, dedup, splitComma }?: {
-        defaults?: undefined;
-        dedup?: boolean;
-        splitComma?: boolean;
-    }): number[] | undefined;
-    arrayOfNumber(key: string, { defaults, dedup, splitComma }?: {
-        defaults?: undefined;
-        dedup?: boolean;
-        splitComma?: boolean;
-    }): number[] | undefined;
-    arrayOfString(key: string, { defaults, dedup, splitComma }?: {
-        defaults?: undefined;
-        dedup?: boolean;
-        splitComma?: boolean;
-    }): string[] | undefined;
+    int(key: string, options?: Parameters<typeof int>[1]): number | undefined;
+    float(key: string, options?: Parameters<typeof float>[1]): number | undefined;
+    number(key: string, options?: Parameters<typeof number>[1]): number | undefined;
+    bool(key: string, options?: Parameters<typeof bool>[1]): boolean | undefined;
+    string(key: string, options?: Parameters<typeof string>[1]): string | undefined;
+    arrayOfInt(key: string, options?: Parameters<typeof arrayOfInt>[1]): number[] | undefined;
+    arrayOfFloat(key: string, options?: Parameters<typeof arrayOfFloat>[1]): number[] | undefined;
+    arrayOfNumber(key: string, options?: Parameters<typeof arrayOfNumber>[1]): number[] | undefined;
+    arrayOfString(key: string, options?: Parameters<typeof arrayOfString>[1]): string[] | undefined;
 }
 declare const _default: {
     int: typeof int;

@@ -1,36 +1,36 @@
-export function int(str, { radix, defaults } = {}) {
+export function int(str, options = {}) {
     if (str === null || str === undefined) {
-        return defaults;
+        return options.default;
     }
-    const n = parseInt(str, radix);
-    return isNaN(n) ? defaults : n;
+    const n = parseInt(str, options.radix);
+    return isNaN(n) ? options.default : n;
 }
-export function float(str, { defaults } = {}) {
+export function float(str, options = {}) {
     if (str === null || str === undefined) {
-        return defaults;
+        return options.default;
     }
     const n = parseFloat(str);
-    return isNaN(n) ? defaults : n;
+    return isNaN(n) ? options.default : n;
 }
 // https://stackoverflow.com/questions/12227594/which-is-better-numberx-or-parsefloatx
-export function number(str, { defaults } = {}) {
+export function number(str, options = {}) {
     if (str === null || str === undefined) {
-        return defaults;
+        return options.default;
     }
     const n = Number(str);
-    return isNaN(n) ? defaults : n;
+    return isNaN(n) ? options.default : n;
 }
-export function bool(str, { empty = true, defaults } = {}) {
+export function bool(str, options = {}) {
     if (str === null || str === undefined) {
-        return defaults;
+        return options.default;
     }
     const truthy = ['1', 'true', 'yes'];
     const falsy = ['0', 'false', 'no'];
-    if (empty === true) {
-        truthy.push('');
-    }
-    else if (empty === false) {
+    if (options.empty === false) {
         falsy.push('');
+    }
+    else {
+        truthy.push('');
     }
     if (truthy.includes(str)) {
         return true;
@@ -39,23 +39,23 @@ export function bool(str, { empty = true, defaults } = {}) {
         return false;
     }
     else {
-        return defaults;
+        return options.default;
     }
 }
-export function string(str, { defaults } = {}) {
-    return str === null || str === undefined ? defaults : String(str);
+export function string(str, options = {}) {
+    return str === null || str === undefined ? options.default : String(str);
 }
-export function arrayOfInt(str, { radix, defaults, dedup, splitComma } = {}) {
-    return trimArray(toArray(str, splitComma).map(s => int(s, { radix })), defaults, dedup);
+export function arrayOfInt(str, options = {}) {
+    return trimArray(toArray(str, options.splitComma).map(s => int(s, { radix: options.radix })), options.default, options.dedup);
 }
-export function arrayOfFloat(str, { defaults, dedup, splitComma } = {}) {
-    return trimArray(toArray(str, splitComma).map(s => float(s)), defaults, dedup);
+export function arrayOfFloat(str, options = {}) {
+    return trimArray(toArray(str, options.splitComma).map(s => float(s)), options.default, options.dedup);
 }
-export function arrayOfNumber(str, { defaults, dedup, splitComma } = {}) {
-    return trimArray(toArray(str, splitComma).map(s => number(s)), defaults, dedup);
+export function arrayOfNumber(str, options = {}) {
+    return trimArray(toArray(str, options.splitComma).map(s => number(s)), options.default, options.dedup);
 }
-export function arrayOfString(str, { defaults, dedup, splitComma } = {}) {
-    return trimArray(toArray(str, splitComma).map(s => string(s)), defaults, dedup);
+export function arrayOfString(str, options = {}) {
+    return trimArray(toArray(str, options.splitComma).map(s => string(s)), options.default, options.dedup);
 }
 function toArray(str, splitComma = false) {
     if (str === null || str === undefined) {
@@ -67,9 +67,11 @@ function toArray(str, splitComma = false) {
     }
     return a;
 }
-function trimArray(arr, defaults = undefined, dedup = true) {
-    const a = arr.filter((v, i) => v !== null && v !== undefined && (dedup ? arr.indexOf(v) === i : true));
-    return a.length ? a : defaults;
+function trimArray(arr, def = undefined, dedup = true) {
+    const a = arr.filter((v, i) => v !== null &&
+        v !== undefined &&
+        (dedup ? arr.indexOf(v) === i : true));
+    return a.length ? a : def;
 }
 export class StringCaster {
     constructor(source) {
@@ -89,32 +91,32 @@ export class StringCaster {
         const src = this.source instanceof Function ? this.source() : this.source;
         return src instanceof URLSearchParams ? src.getAll(key) : src[key];
     }
-    int(key, { defaults, radix } = {}) {
-        return int(this.get(key), { defaults, radix });
+    int(key, options) {
+        return int(this.get(key), options);
     }
-    float(key, { defaults } = {}) {
-        return float(this.get(key), { defaults });
+    float(key, options) {
+        return float(this.get(key), options);
     }
-    number(key, { defaults } = {}) {
-        return number(this.get(key), { defaults });
+    number(key, options) {
+        return number(this.get(key), options);
     }
-    bool(key, { empty = true, defaults } = {}) {
-        return bool(this.get(key), { empty, defaults });
+    bool(key, options) {
+        return bool(this.get(key), options);
     }
-    string(key, { defaults } = {}) {
-        return string(this.get(key), { defaults });
+    string(key, options) {
+        return string(this.get(key), options);
     }
-    arrayOfInt(key, { radix, defaults, dedup, splitComma } = {}) {
-        return arrayOfInt(this.getAll(key), { radix, defaults, dedup, splitComma });
+    arrayOfInt(key, options) {
+        return arrayOfInt(this.getAll(key), options);
     }
-    arrayOfFloat(key, { defaults, dedup, splitComma } = {}) {
-        return arrayOfFloat(this.getAll(key), { defaults, dedup, splitComma });
+    arrayOfFloat(key, options) {
+        return arrayOfFloat(this.getAll(key), options);
     }
-    arrayOfNumber(key, { defaults, dedup, splitComma } = {}) {
-        return arrayOfNumber(this.getAll(key), { defaults, dedup, splitComma });
+    arrayOfNumber(key, options) {
+        return arrayOfNumber(this.getAll(key), options);
     }
-    arrayOfString(key, { defaults, dedup, splitComma } = {}) {
-        return arrayOfString(this.getAll(key), { defaults, dedup, splitComma });
+    arrayOfString(key, options) {
+        return arrayOfString(this.getAll(key), options);
     }
 }
 export default {

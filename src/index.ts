@@ -1,61 +1,61 @@
 export function int(
   str: string | null | undefined,
-  {
-    radix,
-    defaults
-  }: {
+  options: {
     radix?: number,
-    defaults?: number
+    default?: number
   } = {}
 ): number | undefined {
   if (str === null || str === undefined) {
-    return defaults;
+    return options.default;
   }
 
-  const n = parseInt(str, radix);
-  return isNaN(n) ? defaults : n;
+  const n = parseInt(str, options.radix);
+  return isNaN(n) ? options.default : n;
 }
 
-export function float(str: string | null | undefined, { defaults }: { defaults?: number } = {}): number | undefined {
+export function float(
+  str: string | null | undefined,
+  options: { default?: number } = {}
+): number | undefined {
   if (str === null || str === undefined) {
-    return defaults;
+    return options.default;
   }
 
   const n = parseFloat(str);
-  return isNaN(n) ? defaults : n;
+  return isNaN(n) ? options.default : n;
 }
 
 // https://stackoverflow.com/questions/12227594/which-is-better-numberx-or-parsefloatx
-export function number(str: string | null | undefined, { defaults }: { defaults?: number } = {}): number | undefined {
+export function number(
+  str: string | null | undefined,
+  options: { default?: number } = {}
+): number | undefined {
   if (str === null || str === undefined) {
-    return defaults;
+    return options.default;
   }
 
   const n = Number(str);
-  return isNaN(n) ? defaults : n;
+  return isNaN(n) ? options.default : n;
 }
 
 export function bool(
   str: string | null | undefined,
-  {
-    empty = true,
-    defaults
-  }: {
+  options: {
     empty?: boolean,
-    defaults?: boolean
+    default?: boolean
   } = {}
 ): boolean | undefined {
   if (str === null || str === undefined) {
-    return defaults;
+    return options.default;
   }
 
   const truthy = ['1', 'true', 'yes'];
   const falsy = ['0', 'false', 'no'];
 
-  if (empty === true) {
-    truthy.push('');
-  } else if (empty === false) {
+  if (options.empty === false) {
     falsy.push('');
+  } else {
+    truthy.push('');
   }
 
   if (truthy.includes(str)) {
@@ -63,81 +63,82 @@ export function bool(
   } else if (falsy.includes(str)) {
     return false;
   } else {
-    return defaults;
+    return options.default;
   }
 }
 
-export function string(str: string | null | undefined, { defaults }: { defaults?: string } = {}): string | undefined {
-  return str === null || str === undefined ? defaults : String(str);
+export function string(
+  str: string | null | undefined,
+  options: { default?: string } = {}
+): string | undefined {
+  return str === null || str === undefined ? options.default : String(str);
 }
 
 export function arrayOfInt(
   str: string | string[] | null | undefined,
-  {
-    radix,
-    defaults,
-    dedup,
-    splitComma
-  }: {
+  options: {
     radix?: number,
-    defaults?: undefined,
+    default?: undefined,
     dedup?: boolean,
     splitComma?: boolean
   } = {}
 ): number[] | undefined {
   return trimArray(
-    toArray(str, splitComma).map(s => int(s, { radix })),
-    defaults,
-    dedup
+    toArray(str, options.splitComma).map(s => int(s, { radix: options.radix })),
+    options.default,
+    options.dedup
   );
 }
 
 export function arrayOfFloat(
   str: string | string[] | null | undefined,
-  {
-    defaults,
-    dedup,
-    splitComma
-  }: {
-    defaults?: undefined,
+  options: {
+    default?: undefined,
     dedup?: boolean,
     splitComma?: boolean
   } = {}
 ): number[] | undefined {
-  return trimArray(toArray(str, splitComma).map(s => float(s)), defaults, dedup);
+  return trimArray(
+    toArray(str, options.splitComma).map(s => float(s)),
+    options.default,
+    options.dedup
+  );
 }
 
 export function arrayOfNumber(
   str: string | string[] | null | undefined,
-  {
-    defaults,
-    dedup,
-    splitComma
-  }: {
-    defaults?: undefined,
+  options: {
+    default?: undefined,
     dedup?: boolean,
     splitComma?: boolean
   } = {}
 ): number[] | undefined {
-  return trimArray(toArray(str, splitComma).map(s => number(s)), defaults, dedup);
+  return trimArray(
+    toArray(str, options.splitComma).map(s => number(s)),
+    options.default,
+    options.dedup
+  );
 }
 
 export function arrayOfString(
   str: string | string[] | null | undefined,
-  {
-    defaults,
-    dedup,
-    splitComma
-  }: {
-    defaults?: undefined,
+  options: {
+    default?: undefined,
     dedup?: boolean,
     splitComma?: boolean
   } = {}
 ): string[] | undefined {
-  return trimArray(toArray(str, splitComma).map(s => string(s)), defaults, dedup);
+  return trimArray(
+    toArray(str, options.splitComma).map(s => string(s)),
+    options.default,
+    options.dedup
+  );
 }
 
-function toArray(str: string | string[] | null | undefined, splitComma = false): string[] {
+function toArray(
+  str: string | string[] | null | undefined,
+  splitComma = false
+): string[] {
   if (str === null || str === undefined) {
     return [];
   }
@@ -151,9 +152,18 @@ function toArray(str: string | string[] | null | undefined, splitComma = false):
   return a;
 }
 
-function trimArray<T>(arr: (T | undefined)[], defaults: T[] | undefined = undefined, dedup = true): T[] | undefined {
-  const a = arr.filter((v, i): v is T => v !== null && v !== undefined && (dedup ? arr.indexOf(v) === i : true));
-  return a.length ? a : defaults;
+function trimArray<T>(
+  arr: (T | undefined)[],
+  def: T[] | undefined = undefined,
+  dedup = true
+): T[] | undefined {
+  const a = arr.filter((v, i): v is T =>
+    v !== null &&
+    v !== undefined &&
+    (dedup ? arr.indexOf(v) === i : true)
+  );
+
+  return a.length ? a : def;
 }
 
 type Source = URLSearchParams |
@@ -161,7 +171,7 @@ type Source = URLSearchParams |
   (() => URLSearchParams | Record<string, string | string[]>);
 
 export class StringCaster {
-  private source: Source
+  private source: Source;
 
   constructor(source: Source) {
     this.source = source;
@@ -183,104 +193,40 @@ export class StringCaster {
     return src instanceof URLSearchParams ? src.getAll(key) : src[key];
   }
 
-  int(
-    key: string,
-    {
-      defaults,
-      radix
-    }: {
-      radix?: number,
-      defaults?: number
-    } = {}
-  ): number | undefined {
-    return int(this.get(key), { defaults, radix });
+  int(key: string, options?: Parameters<typeof int>[1]) {
+    return int(this.get(key), options);
   }
 
-  float(key: string, { defaults }: { defaults?: number } = {}): number | undefined {
-    return float(this.get(key), { defaults });
+  float(key: string, options?: Parameters<typeof float>[1]) {
+    return float(this.get(key), options);
   }
 
-  number(key: string, { defaults }: { defaults?: number } = {}): number | undefined {
-    return number(this.get(key), { defaults });
+  number(key: string, options?: Parameters<typeof number>[1]) {
+    return number(this.get(key), options);
   }
 
-  bool(
-    key: string,
-    {
-      empty = true,
-      defaults
-    }: {
-      empty?: boolean,
-      defaults?: boolean
-    } = {}
-  ): boolean | undefined {
-    return bool(this.get(key), { empty, defaults });
+  bool(key: string, options?: Parameters<typeof bool>[1]) {
+    return bool(this.get(key), options);
   }
 
-  string(key: string, { defaults }: { defaults?: string } = {}): string | undefined {
-    return string(this.get(key), { defaults });
+  string(key: string, options?: Parameters<typeof string>[1]) {
+    return string(this.get(key), options);
   }
 
-  arrayOfInt(
-    key: string,
-    {
-      radix,
-      defaults,
-      dedup,
-      splitComma
-    }: {
-      radix?: number,
-      defaults?: undefined,
-      dedup?: boolean,
-      splitComma?: boolean
-    } = {}
-  ): number[] | undefined {
-    return arrayOfInt(this.getAll(key), { radix, defaults, dedup, splitComma });
+  arrayOfInt(key: string, options?: Parameters<typeof arrayOfInt>[1]) {
+    return arrayOfInt(this.getAll(key), options);
   }
 
-  arrayOfFloat(
-    key: string,
-    {
-      defaults,
-      dedup,
-      splitComma
-    }: {
-      defaults?: undefined,
-      dedup?: boolean,
-      splitComma?: boolean
-    } = {}
-  ): number[] | undefined {
-    return arrayOfFloat(this.getAll(key), { defaults, dedup, splitComma });
+  arrayOfFloat(key: string, options?: Parameters<typeof arrayOfFloat>[1]) {
+    return arrayOfFloat(this.getAll(key), options);
   }
 
-  arrayOfNumber(
-    key: string,
-    {
-      defaults,
-      dedup,
-      splitComma
-    }: {
-      defaults?: undefined,
-      dedup?: boolean,
-      splitComma?: boolean
-    } = {}
-  ): number[] | undefined {
-    return arrayOfNumber(this.getAll(key), { defaults, dedup, splitComma });
+  arrayOfNumber(key: string, options?: Parameters<typeof arrayOfNumber>[1]) {
+    return arrayOfNumber(this.getAll(key), options);
   }
 
-  arrayOfString(
-    key: string,
-    {
-      defaults,
-      dedup,
-      splitComma
-    }: {
-      defaults?: undefined,
-      dedup?: boolean,
-      splitComma?: boolean
-    } = {}
-  ): string[] | undefined {
-    return arrayOfString(this.getAll(key), { defaults, dedup, splitComma });
+  arrayOfString(key: string, options?: Parameters<typeof arrayOfString>[1]) {
+    return arrayOfString(this.getAll(key), options);
   }
 }
 
