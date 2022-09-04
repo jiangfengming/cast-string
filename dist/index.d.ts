@@ -1,44 +1,71 @@
+/// <reference types="node" />
+export declare function int(str: string | null | undefined, options: {
+    radix?: number;
+    default: number;
+}): number;
 export declare function int(str: string | null | undefined, options?: {
     radix?: number;
-    default?: number;
 }): number | undefined;
-export declare function float(str: string | null | undefined, options?: {
-    default?: number;
-}): number | undefined;
-export declare function number(str: string | null | undefined, options?: {
-    default?: number;
-}): number | undefined;
+export declare function float(str: string | null | undefined, options: {
+    default: number;
+}): number;
+export declare function float(str: string | null | undefined, options?: Record<string, never>): number | undefined;
+export declare function number(str: string | null | undefined, options: {
+    default: number;
+}): number;
+export declare function number(str: string | null | undefined, options?: Record<string, never>): number | undefined;
+export declare function bool(str: string | null | undefined, options: {
+    empty?: boolean;
+    default: boolean;
+}): boolean;
 export declare function bool(str: string | null | undefined, options?: {
     empty?: boolean;
-    default?: boolean;
 }): boolean | undefined;
-export declare function string(str: string | null | undefined, options?: {
-    default?: string;
-}): string | undefined;
+export declare function string(str: string | null | undefined, options: {
+    default: string;
+}): string;
+export declare function string(str: string | null | undefined, options?: Record<string, never>): string | undefined;
+export declare function arrayOfInt(str: string | string[] | null | undefined, options: {
+    radix?: number;
+    default: number[];
+    dedup?: boolean;
+    splitComma?: boolean;
+}): number[];
 export declare function arrayOfInt(str: string | string[] | null | undefined, options?: {
     radix?: number;
-    default?: undefined;
     dedup?: boolean;
     splitComma?: boolean;
 }): number[] | undefined;
+export declare function arrayOfFloat(str: string | string[] | null | undefined, options: {
+    default: number[];
+    dedup?: boolean;
+    splitComma?: boolean;
+}): number[];
 export declare function arrayOfFloat(str: string | string[] | null | undefined, options?: {
-    default?: undefined;
     dedup?: boolean;
     splitComma?: boolean;
 }): number[] | undefined;
+export declare function arrayOfNumber(str: string | string[] | null | undefined, options: {
+    default: number[];
+    dedup?: boolean;
+    splitComma?: boolean;
+}): number[];
 export declare function arrayOfNumber(str: string | string[] | null | undefined, options?: {
-    default?: undefined;
     dedup?: boolean;
     splitComma?: boolean;
 }): number[] | undefined;
+export declare function arrayOfString(str: string | string[] | null | undefined, options: {
+    default: string[];
+    dedup?: boolean;
+    splitComma?: boolean;
+}): string[];
 export declare function arrayOfString(str: string | string[] | null | undefined, options?: {
-    default?: undefined;
     dedup?: boolean;
     splitComma?: boolean;
 }): string[] | undefined;
 declare type Source = URLSearchParams | Record<string, string | string[]> | (() => URLSearchParams | Record<string, string | string[]>);
 export declare class StringCaster {
-    private source;
+    source: Source;
     constructor(source: Source);
     private get;
     private getAll;

@@ -12,7 +12,6 @@ export function float(str, options = {}) {
     const n = parseFloat(str);
     return isNaN(n) ? options.default : n;
 }
-// https://stackoverflow.com/questions/12227594/which-is-better-numberx-or-parsefloatx
 export function number(str, options = {}) {
     if (str === null || str === undefined) {
         return options.default;
@@ -74,6 +73,7 @@ function trimArray(arr, def = undefined, dedup = true) {
     return a.length ? a : def;
 }
 export class StringCaster {
+    source;
     constructor(source) {
         this.source = source;
     }

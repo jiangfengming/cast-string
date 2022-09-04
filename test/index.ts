@@ -1,4 +1,4 @@
-import assert from 'assert';
+import assert from 'node:assert';
 import {
   int,
   float,
@@ -10,7 +10,7 @@ import {
   arrayOfNumber,
   arrayOfString,
   StringCaster
-} from '../dist/index.js';
+} from '../src/index.js';
 
 assert.strictEqual(int('10.1cm'), 10);
 assert.strictEqual(int('10.1', { radix: 2 }), 2);

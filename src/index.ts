@@ -2,6 +2,21 @@ export function int(
   str: string | null | undefined,
   options: {
     radix?: number,
+    default: number
+  }
+): number
+
+export function int(
+  str: string | null | undefined,
+  options?: {
+    radix?: number
+  }
+): number | undefined
+
+export function int(
+  str: string | null | undefined,
+  options: {
+    radix?: number,
     default?: number
   } = {}
 ): number | undefined {
@@ -12,6 +27,16 @@ export function int(
   const n = parseInt(str, options.radix);
   return isNaN(n) ? options.default : n;
 }
+
+export function float(
+  str: string | null | undefined,
+  options: { default: number }
+): number
+
+export function float(
+  str: string | null | undefined,
+  options?: Record<string, never>
+): number | undefined
 
 export function float(
   str: string | null | undefined,
@@ -28,6 +53,16 @@ export function float(
 // https://stackoverflow.com/questions/12227594/which-is-better-numberx-or-parsefloatx
 export function number(
   str: string | null | undefined,
+  options: { default: number }
+): number
+
+export function number(
+  str: string | null | undefined,
+  options?: Record<string, never>
+): number | undefined
+
+export function number(
+  str: string | null | undefined,
   options: { default?: number } = {}
 ): number | undefined {
   if (str === null || str === undefined) {
@@ -37,6 +72,21 @@ export function number(
   const n = Number(str);
   return isNaN(n) ? options.default : n;
 }
+
+export function bool(
+  str: string | null | undefined,
+  options: {
+    empty?: boolean,
+    default: boolean
+  }
+): boolean
+
+export function bool(
+  str: string | null | undefined,
+  options?: {
+    empty?: boolean
+  }
+): boolean | undefined
 
 export function bool(
   str: string | null | undefined,
@@ -69,6 +119,16 @@ export function bool(
 
 export function string(
   str: string | null | undefined,
+  options: { default: string }
+): string
+
+export function string(
+  str: string | null | undefined,
+  options?: Record<string, never>
+): string | undefined
+
+export function string(
+  str: string | null | undefined,
   options: { default?: string } = {}
 ): string | undefined {
   return str === null || str === undefined ? options.default : String(str);
@@ -78,7 +138,26 @@ export function arrayOfInt(
   str: string | string[] | null | undefined,
   options: {
     radix?: number,
-    default?: undefined,
+    default: number[],
+    dedup?: boolean,
+    splitComma?: boolean
+  }
+): number[]
+
+export function arrayOfInt(
+  str: string | string[] | null | undefined,
+  options?: {
+    radix?: number,
+    dedup?: boolean,
+    splitComma?: boolean
+  }
+): number[] | undefined
+
+export function arrayOfInt(
+  str: string | string[] | null | undefined,
+  options: {
+    radix?: number,
+    default?: number[],
     dedup?: boolean,
     splitComma?: boolean
   } = {}
@@ -93,7 +172,24 @@ export function arrayOfInt(
 export function arrayOfFloat(
   str: string | string[] | null | undefined,
   options: {
-    default?: undefined,
+    default: number[],
+    dedup?: boolean,
+    splitComma?: boolean
+  }
+): number[]
+
+export function arrayOfFloat(
+  str: string | string[] | null | undefined,
+  options?: {
+    dedup?: boolean,
+    splitComma?: boolean
+  }
+): number[] | undefined
+
+export function arrayOfFloat(
+  str: string | string[] | null | undefined,
+  options: {
+    default?: number[],
     dedup?: boolean,
     splitComma?: boolean
   } = {}
@@ -108,7 +204,24 @@ export function arrayOfFloat(
 export function arrayOfNumber(
   str: string | string[] | null | undefined,
   options: {
-    default?: undefined,
+    default: number[],
+    dedup?: boolean,
+    splitComma?: boolean
+  }
+): number[]
+
+export function arrayOfNumber(
+  str: string | string[] | null | undefined,
+  options?: {
+    dedup?: boolean,
+    splitComma?: boolean
+  }
+): number[] | undefined
+
+export function arrayOfNumber(
+  str: string | string[] | null | undefined,
+  options: {
+    default?: number[],
     dedup?: boolean,
     splitComma?: boolean
   } = {}
@@ -123,7 +236,24 @@ export function arrayOfNumber(
 export function arrayOfString(
   str: string | string[] | null | undefined,
   options: {
-    default?: undefined,
+    default: string[],
+    dedup?: boolean,
+    splitComma?: boolean
+  }
+): string[]
+
+export function arrayOfString(
+  str: string | string[] | null | undefined,
+  options?: {
+    dedup?: boolean,
+    splitComma?: boolean
+  }
+): string[] | undefined
+
+export function arrayOfString(
+  str: string | string[] | null | undefined,
+  options: {
+    default?: string[],
     dedup?: boolean,
     splitComma?: boolean
   } = {}
@@ -171,7 +301,7 @@ type Source = URLSearchParams |
   (() => URLSearchParams | Record<string, string | string[]>);
 
 export class StringCaster {
-  private source: Source;
+  source: Source;
 
   constructor(source: Source) {
     this.source = source;
