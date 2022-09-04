@@ -1,4 +1,3 @@
-/// <reference types="node" />
 export declare function int(str: string | null | undefined, options: {
     radix?: number;
     default: number;
