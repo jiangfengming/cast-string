@@ -1,24 +1,8 @@
+export function int(str: string | null | undefined, options: { radix?: number, default: number }): number
+export function int(str: string | null | undefined, options?: { radix?: number, default?: number }): number | undefined
 export function int(
   str: string | null | undefined,
-  options: {
-    radix?: number,
-    default: number
-  }
-): number
-
-export function int(
-  str: string | null | undefined,
-  options?: {
-    radix?: number
-  }
-): number | undefined
-
-export function int(
-  str: string | null | undefined,
-  options: {
-    radix?: number,
-    default?: number
-  } = {}
+  options: { radix?: number, default?: number } = {}
 ): number | undefined {
   if (str === null || str === undefined) {
     return options.default;
@@ -28,20 +12,9 @@ export function int(
   return isNaN(n) ? options.default : n;
 }
 
-export function float(
-  str: string | null | undefined,
-  options: { default: number }
-): number
-
-export function float(
-  str: string | null | undefined,
-  options?: Record<string, never>
-): number | undefined
-
-export function float(
-  str: string | null | undefined,
-  options: { default?: number } = {}
-): number | undefined {
+export function float(str: string | null | undefined, options: { default: number }): number
+export function float(str: string | null | undefined, options?: { default?: number }): number | undefined
+export function float(str: string | null | undefined, options: { default?: number } = {}): number | undefined {
   if (str === null || str === undefined) {
     return options.default;
   }
@@ -51,20 +24,9 @@ export function float(
 }
 
 // https://stackoverflow.com/questions/12227594/which-is-better-numberx-or-parsefloatx
-export function number(
-  str: string | null | undefined,
-  options: { default: number }
-): number
-
-export function number(
-  str: string | null | undefined,
-  options?: Record<string, never>
-): number | undefined
-
-export function number(
-  str: string | null | undefined,
-  options: { default?: number } = {}
-): number | undefined {
+export function number(str: string | null | undefined, options: { default: number }): number
+export function number(str: string | null | undefined, options?: { default?: number }): number | undefined
+export function number(str: string | null | undefined, options: { default?: number } = {}): number | undefined {
   if (str === null || str === undefined) {
     return options.default;
   }
@@ -73,27 +35,16 @@ export function number(
   return isNaN(n) ? options.default : n;
 }
 
-export function bool(
-  str: string | null | undefined,
-  options: {
-    empty?: boolean,
-    default: boolean
-  }
-): boolean
+export function bool(str: string | null | undefined, options: { empty?: boolean, default: boolean }): boolean
 
 export function bool(
   str: string | null | undefined,
-  options?: {
-    empty?: boolean
-  }
+  options?: { empty?: boolean, default?: boolean }
 ): boolean | undefined
 
 export function bool(
   str: string | null | undefined,
-  options: {
-    empty?: boolean,
-    default?: boolean
-  } = {}
+  options: { empty?: boolean, default?: boolean } = {}
 ): boolean | undefined {
   if (str === null || str === undefined) {
     return options.default;
@@ -117,20 +68,9 @@ export function bool(
   }
 }
 
-export function string(
-  str: string | null | undefined,
-  options: { default: string }
-): string
-
-export function string(
-  str: string | null | undefined,
-  options?: Record<string, never>
-): string | undefined
-
-export function string(
-  str: string | null | undefined,
-  options: { default?: string } = {}
-): string | undefined {
+export function string(str: string | null | undefined, options: { default: string }): string
+export function string(str: string | null | undefined, options?: { default?: string }): string | undefined
+export function string(str: string | null | undefined, options: { default?: string } = {}): string | undefined {
   return str === null || str === undefined ? options.default : String(str);
 }
 
@@ -148,6 +88,7 @@ export function arrayOfInt(
   str: string | string[] | null | undefined,
   options?: {
     radix?: number,
+    default?: number[],
     dedup?: boolean,
     splitComma?: boolean
   }
@@ -181,6 +122,7 @@ export function arrayOfFloat(
 export function arrayOfFloat(
   str: string | string[] | null | undefined,
   options?: {
+    default?: number[],
     dedup?: boolean,
     splitComma?: boolean
   }
@@ -213,6 +155,7 @@ export function arrayOfNumber(
 export function arrayOfNumber(
   str: string | string[] | null | undefined,
   options?: {
+    default?: number[],
     dedup?: boolean,
     splitComma?: boolean
   }
@@ -245,6 +188,7 @@ export function arrayOfString(
 export function arrayOfString(
   str: string | string[] | null | undefined,
   options?: {
+    default?: string[],
     dedup?: boolean,
     splitComma?: boolean
   }
@@ -323,39 +267,151 @@ export class StringCaster {
     return src instanceof URLSearchParams ? src.getAll(key) : src[key];
   }
 
-  int(key: string, options?: Parameters<typeof int>[1]) {
+  int(key: string, options: { radix?: number, default: number }): number
+  int(key: string, options?: { radix?: number, default?: number }): number | undefined
+  int(key: string, options: { radix?: number, default?: number } = {}): number | undefined {
     return int(this.get(key), options);
   }
 
-  float(key: string, options?: Parameters<typeof float>[1]) {
+  float(key: string, options: { default: number }): number
+  float(key: string, options?: { default?: number }): number | undefined
+  float(key: string, options: { default?: number } = {}): number | undefined {
     return float(this.get(key), options);
   }
 
-  number(key: string, options?: Parameters<typeof number>[1]) {
+  number(key: string, options: { default: number }): number
+  number(key: string, options?: { default?: number }): number | undefined
+  number(key: string, options: { default?: number } = {}): number | undefined {
     return number(this.get(key), options);
   }
 
-  bool(key: string, options?: Parameters<typeof bool>[1]) {
+  bool(key: string, options: { empty?: boolean, default: boolean }): boolean
+  bool(key: string, options?: { empty?: boolean, default?: boolean }): boolean | undefined
+  bool(key: string, options: { empty?: boolean, default?: boolean } = {}): boolean | undefined {
     return bool(this.get(key), options);
   }
 
-  string(key: string, options?: Parameters<typeof string>[1]) {
+  string(key: string, options: { default: string }): string
+  string(key: string, options?: { default?: string }): string | undefined
+  string(key: string, options: { default?: string } = {}): string | undefined {
     return string(this.get(key), options);
   }
 
-  arrayOfInt(key: string, options?: Parameters<typeof arrayOfInt>[1]) {
+  arrayOfInt(
+    key: string,
+    options: {
+      radix?: number,
+      default: number[],
+      dedup?: boolean,
+      splitComma?: boolean
+    }
+  ): number[]
+
+  arrayOfInt(
+    key: string,
+    options?: {
+      radix?: number,
+      default?: number[],
+      dedup?: boolean,
+      splitComma?: boolean
+    }
+  ): number[] | undefined
+
+  arrayOfInt(
+    key: string,
+    options: {
+      radix?: number,
+      default?: number[],
+      dedup?: boolean,
+      splitComma?: boolean
+    } = {}
+  ): number[] | undefined {
     return arrayOfInt(this.getAll(key), options);
   }
 
-  arrayOfFloat(key: string, options?: Parameters<typeof arrayOfFloat>[1]) {
+  arrayOfFloat(
+    key: string,
+    options: {
+      default: number[],
+      dedup?: boolean,
+      splitComma?: boolean
+    }
+  ): number[]
+
+  arrayOfFloat(
+    key: string,
+    options?: {
+      default?: number[],
+      dedup?: boolean,
+      splitComma?: boolean
+    }
+  ): number[] | undefined
+
+  arrayOfFloat(
+    key: string,
+    options: {
+      default?: number[],
+      dedup?: boolean,
+      splitComma?: boolean
+    } = {}
+  ): number[] | undefined {
     return arrayOfFloat(this.getAll(key), options);
   }
 
-  arrayOfNumber(key: string, options?: Parameters<typeof arrayOfNumber>[1]) {
+  arrayOfNumber(
+    key: string,
+    options: {
+      default: number[],
+      dedup?: boolean,
+      splitComma?: boolean
+    }
+  ): number[]
+
+  arrayOfNumber(key: string,
+    options?: {
+      default?: number[],
+      dedup?: boolean,
+      splitComma?: boolean
+    }
+  ): number[] | undefined
+
+  arrayOfNumber(
+    key: string,
+    options: {
+      default?: number[],
+      dedup?: boolean,
+      splitComma?: boolean
+    } = {}
+  ): number[] | undefined {
     return arrayOfNumber(this.getAll(key), options);
   }
 
-  arrayOfString(key: string, options?: Parameters<typeof arrayOfString>[1]) {
+  arrayOfString(
+    key: string,
+    options: {
+      default: string[],
+      dedup?: boolean,
+      splitComma?: boolean
+    }
+  ): string[]
+
+  arrayOfString(
+    key: string,
+    options?: {
+      default?: string[],
+      dedup?: boolean,
+      splitComma?: boolean
+    }
+  ): string[] | undefined
+
+  arrayOfString(
+    key: string,
+    options: {
+      default?: string[],
+      dedup?: boolean,
+      splitComma?: boolean
+    } = {}
+  ): string[] | undefined {
     return arrayOfString(this.getAll(key), options);
   }
 }

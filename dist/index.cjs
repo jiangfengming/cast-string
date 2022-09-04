@@ -103,31 +103,31 @@ class StringCaster {
         const src = this.source instanceof Function ? this.source() : this.source;
         return src instanceof URLSearchParams ? src.getAll(key) : src[key];
     }
-    int(key, options) {
+    int(key, options = {}) {
         return int(this.get(key), options);
     }
-    float(key, options) {
+    float(key, options = {}) {
         return float(this.get(key), options);
     }
-    number(key, options) {
+    number(key, options = {}) {
         return number(this.get(key), options);
     }
-    bool(key, options) {
+    bool(key, options = {}) {
         return bool(this.get(key), options);
     }
-    string(key, options) {
+    string(key, options = {}) {
         return string(this.get(key), options);
     }
-    arrayOfInt(key, options) {
+    arrayOfInt(key, options = {}) {
         return arrayOfInt(this.getAll(key), options);
     }
-    arrayOfFloat(key, options) {
+    arrayOfFloat(key, options = {}) {
         return arrayOfFloat(this.getAll(key), options);
     }
-    arrayOfNumber(key, options) {
+    arrayOfNumber(key, options = {}) {
         return arrayOfNumber(this.getAll(key), options);
     }
-    arrayOfString(key, options) {
+    arrayOfString(key, options = {}) {
         return arrayOfString(this.getAll(key), options);
     }
 }

@@ -84,7 +84,7 @@ const query = {
 };
 
 const caster = new StringCaster(query);
-assert.strictEqual(caster.int('i'), 1);
+assert.strictEqual(caster.int('i', { default: 0 }), 1);
 assert.deepStrictEqual(caster.arrayOfInt('ai'), [1, 2]);
 assert.deepStrictEqual(caster.arrayOfInt('ai2', { splitComma: true }), [1, 2, 3]);
 assert.strictEqual(caster.source, query);
