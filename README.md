@@ -1,9 +1,9 @@
 # cast-string
-Convert URL query string to number and boolean.
+This module allows you to convert URL query strings to numbers and booleans.
 
 ## Import
 ### ES Module
-Imort named exports:
+Import named exports:
 ```ts
 import {
   int,
@@ -23,7 +23,7 @@ const id = int(urlSearchParams.get('id'));
 
 Import default export:
 ```ts
-import cast from 'case-string';
+import cast from 'cast-string';
 
 const id = cast.int(urlSearchParams.get('id'));
 ```
@@ -44,8 +44,9 @@ const {
 } = require('cast-string');
 ```
 
-NOTE: This package is written in ES2020 syntax and not transpiled. It is only tested on Node.js v14+.
-To use it in old browsers, you need to transpile the code using tool such as Babel.
+NOTE: This package is written in ES2020 syntax and has not been transpiled. It has only been tested on Node.js v14+.
+To use it in older browsers, you will need to transpile the code using a tool such as Babel.
+
 ## Functions
 
 * [int](#int)
@@ -71,7 +72,7 @@ function int(
 ): number | undefined
 ```
 
-Convert `str` to number using `parseInt()`. If `parseInt()` returns `NaN`, `options.default` will be returned.
+Convert `str` to a number with `parseInt()`. If `parseInt()` returns `NaN`, `options.default` is returned.
 
 ```ts
 int('10.1cm')
@@ -99,7 +100,7 @@ function float(
 ): number | undefined
 ```
 
-Convert `str` to number using `parseFloat()`.
+Convert `str` to a number with `parseFloat()`.
 
 ```ts
 float('10.1cm')
@@ -124,7 +125,7 @@ function number(
 ): number | undefined
 ```
 
-Convert `str` to number using `Number()`.
+Convert `str` to a number with `Number()`.
 
 ```ts
 number('10.1')
@@ -152,22 +153,19 @@ function bool(
 ): boolean | undefined
 ```
 
-Convert `str` to boolean.
+Convert `str` to a boolean. Truthy values are `'1'`, `'true'`, `'yes'`. Falsy values are `'0'`, `'false'`, `'no'`.
 
-Truthy values are `'1'`, `'true'`, `'yes'`.
-Falsy values are `'0'`, `'false'`, `'no'`.
-
-If `empty` is not `false`, empty string `''` is a truthy value.
-In query string, a param with empty value normally means `true`, for example
+If `empty` is not `false`, the empty string '' is considered a truthy value.
+This is useful when dealing with query string parameters, where an empty value typically indicates `true`. For example:
 
 ```ts
 const searchParams = new URL('https://www.example.com/list?recursive').searchParams
 const isRecursive = bool(searchParams.get('recursive'))
 ```
 
-If `empty` is `false`, then empty string is a falsy value.
+If `empty` is `false`, the empty string is considered a falsy value.
 
-If `str` is not truthy nor falsy, `options.default` will be returned.
+If `str` is neither truthy nor falsy, `options.default` is returned.
 
 ```ts
 bool('1')
@@ -201,8 +199,8 @@ function string(
 ): string | undefined
 ```
 
-If `str` is a string, return as is.
-If `str` is `null`/`undefined`, return `options.default`.
+The string function returns the input `str` if it is a string.
+If `str` is `null` or `undefined`, the function returns the `options.default` value, which defaults to `undefined`.
 
 ```ts
 string('foo')
@@ -235,7 +233,7 @@ function arrayOfInt(
 ): number[] | undefined
 ```
 
-Convert `str` to an array of number using `parseInt()`.
+Convert `str` to an array of numbers with `parseInt()`.
 
 ```ts
 arrayOfInt(['1', '1cm', '10.1cm', '0xB.1', 'a', null, undefined])
@@ -279,7 +277,7 @@ function arrayOfFloat(
 ): number[] | undefined
 ```
 
-Convert `str` to an array of number using `parseFloat()`.
+Convert `str` to an array of numbers with `parseFloat()`.
 
 ```ts
 arrayOfFloat(['1', '1', '10.1', '', null, undefined])
@@ -323,7 +321,7 @@ function arrayOfNumber(
 ): number[] | undefined
 ```
 
-Convert `str` to an array of number using `Number()`.
+Convert `str` to an array of numbers with `Number()`.
 
 ```ts
 arrayOfNumber(['1', '1', '1.1', '2cm', '1e2', '', 'a', null, undefined])
@@ -367,7 +365,7 @@ function arrayOfString(
 ): string[] | undefined
 ```
 
-Convert `str` to an array of string.
+Convert `str` to an array of strings.
 
 ```ts
 arrayOfString(['foo', 'foo', '', null, undefined])
@@ -394,9 +392,9 @@ constructor(source:
 ```
 
 Create a cast object from `source`.
-`source` can be a [URLSearchParams](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams) object.
-Or an object of key-value pairs,
-Or a function that returns a URLSearchParams or key-value pair object.
+`source` can be a [URLSearchParams](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams) object,
+a key-value pair object,
+or a function that returns a URLSearchParams or key-value pair object.
 
 ```ts
 const params = new StringCaster(new URLSearchParams('a=1&b=1&b=2&c=1,2,3'))
